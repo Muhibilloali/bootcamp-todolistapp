@@ -45,7 +45,10 @@ body {
     width: 100%;
     height: auto;
     margin-top: 100px;
+    margin-bottom: 5000px;
+    padding-bottom: 20px;
 }
+
 
 .box1 {
     margin-top: 10px;
@@ -79,11 +82,12 @@ body {
     height: 60px;
     display: flex;
     margin-right: 0;
+    margin-top: 0px;
     justify-content: space-between;
 }
 
 .groupName {
-    padding: 20px 0px 0px 10px;
+    padding: 20px 0px 0px 20px;
     font-size: 38px;
     transform: translateY(-25px);
 }
@@ -366,4 +370,12 @@ body {
 .btn-ok button {
     padding-top: -10px;
     padding-bottom: 25px;
+}
+
+.addmodal {
+    color: #000000;
+    padding: 10px;
+    font-size: 30px;
+    font-weight: 900;
+    cursor: pointer;
 }

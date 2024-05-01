@@ -4,6 +4,7 @@ import Profile from "../Images/user-icon.jpg";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddAlertIcon from "@mui/icons-material/AddAlert";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AddIcon from "@mui/icons-material/Add";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -109,7 +110,7 @@ function Daily() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
+        "https://jsonplaceholder.typicode.com/users?_limit=5"
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -129,37 +130,56 @@ function Daily() {
 
   // const toggleMenuNew1 = (newValue) => {
   //   setIsNewOpen(newValue !== undefined ? newValue : !isNewOpen);
-  // };  
+  // };
 
   const [openDropdownId, setOpenDropdownId] = useState(null);
 
   const toggleMenuNew = (id) => {
     setOpenDropdownId(openDropdownId === id ? null : id);
   };
-  
+
   const renderTitles = () => {
     return data.map((item) => (
       <div key={item.id} className="plan">
         <div className="item-text">
-        <p>{item.name}</p>
+          <p>{item.name}</p>
         </div>
         <div className="task-pointer">
-        <MoreVertIcon onClick={() => toggleMenuNew(item.id)} className="pointer"   />
-        <span className="tree-pointer" id={item.id}>
-          
-          {openDropdownId === item.id && (
-            <div className="dropdown-menu">
-              <ul>
-                <li>Move to “In process”</li>
-                <li>Move to “Done”</li>
-                <li>Delete</li>
-              </ul>
-            </div>
-          )}
-        </span>
+          <MoreVertIcon
+            onClick={() => toggleMenuNew(item.id)}
+            className="pointer"
+          />
+          <span className="tree-pointer" id={item.id}>
+            {openDropdownId === item.id && (
+              <div className="dropdown-menu">
+                <ul>
+                  <li>Move to “In process”</li>
+                  <li>Move to “Done”</li>
+                  <li>Delete</li>
+                </ul>
+              </div>
+            )}
+          </span>
         </div>
       </div>
     ));
+  };
+
+  //bu kod drog and drop uchun
+
+  // const YourComponent = () => {
+  const allowDrop = (ev) => {
+    ev.preventDefault();
+  };
+
+  const drag = (ev) => {
+    ev.dataTransfer.setData("text", ev.target.id);
+  };
+
+  const drop = (ev) => {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
   };
 
   // bu yerdan return boshlanadi
@@ -219,7 +239,7 @@ function Daily() {
               </div>
               <div>
                 <p className="option" onClick={() => setModalIsOpen(true)}>
-                  <AddAlertIcon /> add special day
+                  Add Special Day
                 </p>
               </div>
               <button className="logout">
@@ -237,58 +257,43 @@ function Daily() {
             </p>
           </div>
           <div className="contain">
-            <div className="box1">
-              <div className="list">
-                <p className="groupName">To do</p>
-                {/* <span className="tree-pointer">
-                  <MoreVertIcon onClick={toggleMenuToDo} className="pointer" />
-                  {isToDoOpen && (
-                    <div className="dropdown-menu">
-                      <ul>
-                        <li>Move to “In process”</li>
-                        <li>Move to “Done”</li>
-                        <li>Delete</li>
-                      </ul>
-                    </div>
-                  )}
-                </span> */}
-              </div>
-              <div className="tasks">{renderTitles()}</div>
+            <div className="contain-todo">
+              <div className="box1">
+                <div className="list">
+                  <p className="groupName">To do</p>
+                  <div
+                    className="addmodal"
+                    onClick={() => setModalIsOpen(true)}
+                  >
+                    <AddIcon />
+                  </div>
+                </div>
 
-              <p className="testAddTask">+ add task</p>
-            </div>
-            <div className="box2">
-              <div className="list">
-                <p className="groupName">In process</p>
-                {/* <span className="tree-pointer">
-                  <MoreVertIcon onClick={toggleMenuProgress} />
-                  {isProgressOpen && (
-                    <div className="dropdown-menu">
-                      <ul>
-                        <li>Move to "To Do"</li>
-                        <li>Move to “Done”</li>
-                        <li>Delete</li>
-                      </ul>
-                    </div>
-                  )}
-                </span> */}
+                <div>
+                  {/* <div onDrop={drop} onDragOver={allowDrop}>
+                  {renderTitles()}
+                  </div> */}
+                  <div className="tasks">
+                  <div id="drag1" draggable="true" onDragStart={drag}>
+                    {/* Sürüklenen öğe */}
+                    {renderTitles()}
+                  </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="box3">
-              <div className="list">
-                <p className="groupName">Done</p>
-                {/* <span className="tree-pointer">
-                  <MoreVertIcon onClick={toggleMenuDone} />
-                  {isDoneOpen && (
-                    <div className="dropdown-menu">
-                      <ul>
-                        <li>Move to “To Do”</li>
-                        <li>Move to “In process”</li>
-                        <li>Delete</li>
-                      </ul>
-                    </div>
-                  )}
-                </span> */}
+            <div className="contain-progress">
+              <div className="box2">
+                <div className="list">
+                  <p className="groupName">In process</p>
+                </div>
+              </div>
+            </div>
+            <div className="contain-done">
+              <div className="box3">
+                <div className="list">
+                  <p className="groupName">Done</p>
+                </div>
               </div>
             </div>
           </div>
@@ -300,9 +305,6 @@ function Daily() {
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
         >
-          {/* <div className="close-emoji" onClick={() => setModalIsOpen(false)}>
-          ❎
-        </div> */}
           <h3>All Special Days</h3>
           <div>
             <DatePicker

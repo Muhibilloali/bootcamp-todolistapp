@@ -9,6 +9,7 @@ import UserMessage from "./components/UserMessagePages/UserMessage";
 import Daily from "./components/DailyPages/Daily";
 import Monthly from "./components/MonthlyPages/Monthly";
 import Weekly from "./components/WeeklyPages/Weekly";
+import Drag from "./components/Drag/Drag";
 
 
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/daily" element={<Daily />} />
           <Route path="/monthly" element={<Monthly />} />
           <Route path="/weekly" element={<Weekly />} />
+          <Route path="/drag" element={<Drag/>} />
         </Routes>
       </Router>
     </>
