@@ -47,9 +47,6 @@ function Verification() {
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
       >
-        {/* <div className="close-emoji" onClick={() => setModalIsOpen(false)}>
-          ❎
-        </div> */}
         <h3>✅ Registration Successfully!</h3>
         <p>We send link to your email. Please check your email</p>
         <div>

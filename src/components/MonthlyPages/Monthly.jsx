@@ -52,7 +52,9 @@ function Monthly() {
               <p className="option-activ"><Link to="/monthly">Monthly Tasks</Link></p>
             </div>
             <div>
-              <p className="option">+ add special day</p>
+            <p className="option" onClick={() => setModalIsOpen(true)}>
+                  Add Special Day
+                </p>
             </div>
             <button className="logout">Log out</button>
           </div>

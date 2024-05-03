@@ -11,8 +11,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import "./Daily.css";
+import { DragonDropComponent } from "../DragAndDropPages/dragonDropComponent";
 
 function Daily() {
+  // bu yerdagi kod email va usernameni chiqarish uchun ishlatiladi
+  // const { username, email } = user;
+
   // bu kod bugungi sanani chiqarish uchun
   let date = new Date().toLocaleDateString();
   const [presentDate, setPresentDate] = useState(date);
@@ -138,6 +142,19 @@ function Daily() {
     setOpenDropdownId(openDropdownId === id ? null : id);
   };
 
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const handleLogout = () => {
+    console.log("Your account has been logged out🤪🤪🤪");
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    window.location.href = "/";
+    setIsLoggedIn(false);
+  };
+
+  //bu yerdagi kod Delete buttoni uchun
+  
+
+
   const renderTitles = () => {
     return data.map((item) => (
       <div key={item.id} className="plan">
@@ -164,6 +181,9 @@ function Daily() {
       </div>
     ));
   };
+
+
+
 
   //bu kod drog and drop uchun
 
@@ -212,7 +232,7 @@ function Daily() {
                   <h2 className="username">Ali Vefa</h2>
                 </div>
                 <div>
-                  <p className="email">example@email.com</p>
+                  <p className="email">info@email.com</p>
                 </div>
               </div>
             </div>
@@ -242,7 +262,7 @@ function Daily() {
                   Add Special Day
                 </p>
               </div>
-              <button className="logout">
+              <button className="logout" onClick={handleLogout}>
                 Log out <LogoutIcon className="logout-icon" />
               </button>
             </div>
@@ -256,7 +276,7 @@ function Daily() {
               {presentDate} {week}
             </p>
           </div>
-          <div className="contain">
+          {/* <div className="contain">
             <div className="contain-todo">
               <div className="box1">
                 <div className="list">
@@ -270,14 +290,12 @@ function Daily() {
                 </div>
 
                 <div>
-                  {/* <div onDrop={drop} onDragOver={allowDrop}>
-                  {renderTitles()}
-                  </div> */}
+
                   <div className="tasks">
-                  <div id="drag1" draggable="true" onDragStart={drag}>
-                    {/* Sürüklenen öğe */}
-                    {renderTitles()}
-                  </div>
+                    <div id="drag1" draggable="true" onDragStart={drag}>
+
+                      {renderTitles()}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -296,9 +314,15 @@ function Daily() {
                 </div>
               </div>
             </div>
+          </div> */}
+          <div className="contain">
+            
+            <DragonDropComponent />
           </div>
         </div>
       </div>
+
+     
       <div className="modal-addf-plan">
         <Modal
           className="modal-add-plan"

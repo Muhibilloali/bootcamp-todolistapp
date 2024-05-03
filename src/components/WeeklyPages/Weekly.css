@@ -1,0 +1,11 @@
+.week-days{
+    border: 1px solid #5200ff;
+    display: flex;
+    color: rgb(255, 255, 255);
+    height: 40px;
+    width: 102.1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #5100ff;
+}

@@ -1,4 +1,4 @@
-/* body {
+body {
     margin: 0;
     overflow-y: auto;
     overflow-x: auto;
@@ -40,8 +40,9 @@
 }
 
 .contain {
+    position: relative;
     display: flex;
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
     width: 100%;
     height: auto;
     margin-top: 100px;
@@ -51,11 +52,13 @@
 
 
 .box1 {
-    margin-top: 10px;
+    display: flex;
+    position: relative;
+
     margin: 10px 0px 0px 0px;
     border: 2px solid #5200ff;
     width: 400px;
-    height: auto;
+    height: 500px;
     border-radius: 10px;
     gap: 10px;
 }
@@ -77,6 +80,12 @@
     border-radius: 10px;
     gap: 10px;
 }
+.number {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 400;
+
+}
 
 .list {
     height: 60px;
@@ -86,29 +95,20 @@
     justify-content: space-between;
 }
 
-.groupName {
-    padding: 20px 0px 0px 20px;
-    font-size: 38px;
-    transform: translateY(-25px);
-}
 
-.tree-pointer{
-    margin: 8px 5px 0px 0px;
-    cursor: pointer;
-}
 
-.tasks {
-    margin: 0px 20px 0px 0px;
-}
+
 
 .plan {
     display: flex;
-    justify-content: space-between;
     padding: 10px;
-    margin: 20px 0px 0px 20px;
+    text-align: center;
+    justify-content: center;
+    margin-left: -380px;
     border: 1px solid #5200ff;
     border-radius: 5px;
     font-weight: 600;
+    width: 300px;
     height: 50px;
     cursor: pointer;
     background-color: rgb(53, 176, 253);
@@ -120,7 +120,9 @@
     background-color: rgb(100, 211, 117);
     color: #000000;
 }
-
+.plan-yozuv {
+    color: #000000;
+}
 .testAddTask {
     display: flex;
     justify-content: left;
@@ -159,7 +161,10 @@
 .userInfo {
     display: flex;
     flex-direction: row;
-
+    /* justify-content: center; */
+    /* top: 50%;
+    left: 50%;
+    transform: translate(0%, 25%); */
     border-bottom: 1px solid #5200ff;
     height: 140px;
 }
@@ -251,7 +256,7 @@
 }
   
   .dropdown-menu {
-
+    /* position: absolute; */
     width: 100%;
     top: 100%;
     left: 10px;
@@ -383,4 +388,4 @@
     font-size: 30px;
     font-weight: 900;
     cursor: pointer;
-} */
+}

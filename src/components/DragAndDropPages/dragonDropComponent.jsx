@@ -1,9 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
+import './dragonDropComponent.css'
 
-export const CustomKanban = () => {
+const renderTitles = () => {
+  return data.map((item) => (
+    <div key={item.id} className="plan">
+      <div className="item-text">
+        <p>{item.name}</p>
+      </div>
+      <div className="task-pointer">
+        <MoreVertIcon
+          onClick={() => toggleMenuNew(item.id)}
+          className="pointer"
+        />
+        <span className="tree-pointer" id={item.id}>
+          {openDropdownId === item.id && (
+            <div className="dropdown-menu">
+              <ul>
+                <li>Move to “In process”</li>
+                <li>Move to “Done”</li>
+                <li>Delete</li>
+              </ul>
+            </div>
+          )}
+        </span>
+      </div>
+    </div>
+  ));
+};
+
+export const DragonDropComponent = () => {
   return (
     <div className="h-screen w-full bg-neutral-900 text-neutral-50">
       <Board />
@@ -12,35 +40,46 @@ export const CustomKanban = () => {
 };
 
 const Board = () => {
-  const [cards, setCards] = useState(DEFAULT_CARDS);
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/users?_limit=5"
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const json = await response.json();
+      setCards(json);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
 
   return (
-    <div className="flex h-full w-full gap-3 overflow-scroll p-12">
-      <Column
-        title="Backlog"
-        column="backlog"
-        headingColor="text-neutral-500"
-        cards={cards}
-        setCards={setCards}
-      />
+    <div className="flex h-full w-full gap-3 overflow-scroll p-12 ">
       <Column
         title="TODO"
         column="todo"
-        headingColor="text-yellow-200"
         cards={cards}
+       
         setCards={setCards}
       />
       <Column
         title="In progress"
         column="doing"
-        headingColor="text-blue-200"
         cards={cards}
         setCards={setCards}
       />
       <Column
         title="Complete"
         column="done"
-        headingColor="text-emerald-200"
         cards={cards}
         setCards={setCards}
       />
@@ -53,6 +92,7 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
   const [active, setActive] = useState(false);
 
   const handleDragStart = (e, card) => {
+    e.dataTransfer.setData("cardColumn", "todo");
     e.dataTransfer.setData("cardId", card.id);
   };
 
@@ -149,12 +189,15 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
     setActive(false);
   };
 
-  const filteredCards = cards.filter((c) => c.column === column);
+
+   //const filteredCards = cards.filter((c) => c.column === column);
+
+   const filteredCards = cards;
 
   return (
-    <div className="w-56 shrink-0">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className={`font-medium ${headingColor}`}>{title}</h3>
+    <div className="contain">
+      <div className="mb-3 flex items-center justify-between ">
+        <h3 className={`font-medium ${headingColor} `}>{title}</h3>
         <span className="rounded text-sm text-neutral-400">
           {filteredCards.length}
         </span>
@@ -168,7 +211,7 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
         }`}
       >
         {filteredCards.map((c) => {
-          return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
+          return <Card key={c.id} {...c} title={c.name} handleDragStart={handleDragStart} />;
         })}
         <DropIndicator beforeId={null} column={column} />
         <AddCard column={column} setCards={setCards} />
@@ -178,15 +221,17 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
 };
 
 const Card = ({ title, id, column, handleDragStart }) => {
+
   return (
     <>
-      <DropIndicator beforeId={id} column={column} />
+      {/* <DropIndicator beforeId={id} column={column} /> */}
+      <DropIndicator beforeId={id} column=" todo" />
       <motion.div
         layout
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { title, id, column })}
-        className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+        className="cursor-grab rounded border border-red-700 p-3 active:cursor-grabbing"
       >
         <p className="text-sm text-neutral-100">{title}</p>
       </motion.div>
@@ -251,7 +296,7 @@ const AddCard = ({ column, setCards }) => {
 
     const newCard = {
       column,
-      title: text.trim(),
+      name: text.trim(),
       id: Math.random().toString(),
     };
 
@@ -299,35 +344,3 @@ const AddCard = ({ column, setCards }) => {
     </>
   );
 };
-
-const DEFAULT_CARDS = [
-  // BACKLOG
-  { title: "Look into render bug in dashboard", id: "1", column: "backlog" },
-  { title: "SOX compliance checklist", id: "2", column: "backlog" },
-  { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
-  { title: "Document Notifications service", id: "4", column: "backlog" },
-  // TODO
-  {
-    title: "Research DB options for new microservice",
-    id: "5",
-    column: "todo",
-  },
-  { title: "Postmortem for outage", id: "6", column: "todo" },
-  { title: "Sync with product on Q3 roadmap", id: "7", column: "todo" },
-
-  // DOING
-  {
-    title: "Refactor context providers to use Zustand",
-    id: "8",
-    column: "doing",
-  },
-  { title: "Add logging to daily CRON", id: "9", column: "doing" },
-  // DONE
-  {
-    title: "Set up DD dashboards for Lambda listener",
-    id: "10",
-    column: "done",
-  },
-];
-
-export default Column;
