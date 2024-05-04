@@ -7,6 +7,7 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import './Signin.css'
 
 function Signin() {
   const [formData, setFormData] = useState({
@@ -60,7 +61,7 @@ function Signin() {
       </div>
       <hr />
 
-      <div className="form-signup">
+      <div className="form-signin">
         <Card color="transparent" shadow={false}>
           <form
             onSubmit={handleSubmit}

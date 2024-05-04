@@ -93,10 +93,7 @@ import { propTypesObject } from "@material-tailwind/react/types/components/check
           {" "}
           <Link to="/signin"> Sign-in </Link>
         </button>
-        <button className="btn-navbar">
-          {" "}
-          <Link to="/verification">Verification</Link>
-        </button>
+        
       </div>
       <hr />
       <div className="form-signup">

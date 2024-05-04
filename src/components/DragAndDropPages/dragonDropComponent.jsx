@@ -2,34 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
-import './dragonDropComponent.css'
-
-const renderTitles = () => {
-  return data.map((item) => (
-    <div key={item.id} className="plan">
-      <div className="item-text">
-        <p>{item.name}</p>
-      </div>
-      <div className="task-pointer">
-        <MoreVertIcon
-          onClick={() => toggleMenuNew(item.id)}
-          className="pointer"
-        />
-        <span className="tree-pointer" id={item.id}>
-          {openDropdownId === item.id && (
-            <div className="dropdown-menu">
-              <ul>
-                <li>Move to “In process”</li>
-                <li>Move to “Done”</li>
-                <li>Delete</li>
-              </ul>
-            </div>
-          )}
-        </span>
-      </div>
-    </div>
-  ));
-};
+import "./dragonDropComponent.css";
+import { colors } from "@mui/material";
 
 export const DragonDropComponent = () => {
   return (
@@ -49,7 +23,16 @@ const Board = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users?_limit=5"
+        "http://djangoapibekmurod.pythonanywhere.com/todos/",
+        {
+          method: "GET",
+          headers: {
+            // "Content-Type": "application/json",
+            Authorization:
+              "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0ODM3MzY2LCJpYXQiOjE3MTQ4MzM3NjYsImp0aSI6IjAwMDIzMTgxZjY4MTRkZmJhY2NmZTNiMmUwYTVlNTc5IiwidXNlcl9pZCI6MTV9.YfBI5avRndKIZEQ2GUbKhWKwD2vy4bB15KyraDOH3zk",
+          },
+          // body: JSON.stringify(cards),
+        }
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -61,29 +44,24 @@ const Board = () => {
     }
   };
 
-
   return (
-    <div className="flex h-full w-full gap-3 overflow-scroll p-12 ">
-      <Column
-        title="TODO"
-        column="todo"
-        cards={cards}
-       
-        setCards={setCards}
-      />
-      <Column
-        title="In progress"
-        column="doing"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column
-        title="Complete"
-        column="done"
-        cards={cards}
-        setCards={setCards}
-      />
-      <BurnBarrel setCards={setCards} />
+    <div className="flex flex-row h-auto w-full gap-3 overflow-scroll p-12">
+      <div className="flex-auto border-2 border-[#5200ff] p-2">
+        {/* flex-auto border-2 border-blue-900 p-2 */}
+        <h2 className="text-xl font-bold text-center mb-1">TODO</h2>
+        <Column column="todo" cards={cards} setCards={setCards} />
+      </div>
+      <div className="flex-auto h-auto border-2 border-[#5200ff] p-2">
+        <h2 className="text-xl font-bold text-center mb-1">In Progress</h2>
+        <Column column="doing" cards={cards} setCards={setCards} />
+      </div>
+      <div className="flex-auto border-2 border-[#5200ff]  p-2">
+        <h2 className="text-xl font-bold text-center mb-1">Done</h2>
+        <Column column="done" cards={cards} setCards={setCards} />
+      </div>
+      <div className="w-1/5">
+        <BurnBarrel setCards={setCards} />
+      </div>
     </div>
   );
 };
@@ -92,51 +70,25 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
   const [active, setActive] = useState(false);
 
   const handleDragStart = (e, card) => {
-    e.dataTransfer.setData("cardColumn", "todo");
     e.dataTransfer.setData("cardId", card.id);
+    console.log("Dragging:", card.id);
   };
 
-  const handleDragEnd = (e) => {
-    const cardId = e.dataTransfer.getData("cardId");
-
-    setActive(false);
-    clearHighlights();
-
-    const indicators = getIndicators();
-    const { element } = getNearestIndicator(e, indicators);
-
-    const before = element.dataset.before || "-1";
-
-    if (before !== cardId) {
-      let copy = [...cards];
-
-      let cardToTransfer = copy.find((c) => c.id === cardId);
-      if (!cardToTransfer) return;
-      cardToTransfer = { ...cardToTransfer, column };
-
-      copy = copy.filter((c) => c.id !== cardId);
-
-      const moveToBack = before === "-1";
-
-      if (moveToBack) {
-        copy.push(cardToTransfer);
-      } else {
-        const insertAtIndex = copy.findIndex((el) => el.id === before);
-        if (insertAtIndex === undefined) return;
-
-        copy.splice(insertAtIndex, 0, cardToTransfer);
-      }
-
-      setCards(copy);
-    }
-  };
-
-  const handleDragOver = (e) => {
+  const handleDrop = (e, newColumn) => {
     e.preventDefault();
-    highlightIndicator(e);
+    const cardId = e.dataTransfer.getData("cardId");
+    console.log("Dropping:", cardId, "to", newColumn);
 
-    setActive(true);
+    setCards((prev) => {
+      return prev.map((card) => {
+        if (card.id === cardId) {
+          return { ...card, column: newColumn };
+        }
+        return card;
+      });
+    });
   };
+
 
   const clearHighlights = (els) => {
     const indicators = els || getIndicators();
@@ -189,29 +141,35 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
     setActive(false);
   };
 
+  const filteredCards = cards.filter((c) => c.column === column);
 
-   //const filteredCards = cards.filter((c) => c.column === column);
-
-   const filteredCards = cards;
+  // const filteredCards = cards;
 
   return (
     <div className="contain">
       <div className="mb-3 flex items-center justify-between ">
         <h3 className={`font-medium ${headingColor} `}>{title}</h3>
-        <span className="rounded text-sm text-neutral-400">
+        {/* <span className="rounded text-sm text-neutral-400">
           {filteredCards.length}
-        </span>
+        </span> */}
       </div>
       <div
-        onDrop={handleDragEnd}
-        onDragOver={handleDragOver}
+        onDrop={(e) => handleDrop(e, column)}
+        onDragOver={(e) => e.preventDefault()}
         onDragLeave={handleDragLeave}
         className={`h-full w-full transition-colors ${
           active ? "bg-neutral-800/50" : "bg-neutral-800/0"
         }`}
       >
         {filteredCards.map((c) => {
-          return <Card key={c.id} {...c} title={c.name} handleDragStart={handleDragStart} />;
+          return (
+            <Card
+              key={c.id}
+              {...c}
+              title={c.title}
+              handleDragStart={handleDragStart}
+            />
+          );
         })}
         <DropIndicator beforeId={null} column={column} />
         <AddCard column={column} setCards={setCards} />
@@ -221,7 +179,6 @@ const Column = ({ title, headingColor, cards, column, setCards }) => {
 };
 
 const Card = ({ title, id, column, handleDragStart }) => {
-
   return (
     <>
       {/* <DropIndicator beforeId={id} column={column} /> */}
@@ -231,7 +188,7 @@ const Card = ({ title, id, column, handleDragStart }) => {
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { title, id, column })}
-        className="cursor-grab rounded border border-red-700 p-3 active:cursor-grabbing"
+        className="cursor-grab rounded border border-[#5200ff]  bg-[#98E2F6] p-3 active:cursor-grabbing"
       >
         <p className="text-sm text-neutral-100">{title}</p>
       </motion.div>

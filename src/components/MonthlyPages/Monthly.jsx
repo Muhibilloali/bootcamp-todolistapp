@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './Monthly.css'
 import { Link } from 'react-router-dom'
 import Photo from "../Images/user-icon.jpg";
 import Profile from "../Images/user-icon.jpg";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Modal from "react-modal";
+import DatePicker from "react-datepicker";
+import { DragonDropComponent } from "../DragAndDropPages/dragonDropComponent";
 
 function Monthly() {
-
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  useEffect(() => {
+    // Modal ochilganda asosiy ilova elementini aniqlash
+    Modal.setAppElement("#root"); // #root ni ilova asosiy DOM elementining ID si bilan almashtiring
+  }, []);
+  const [startDate, setStartDate] = useState(new Date());
   
   return (
     <div className="dailyPages">
@@ -67,37 +75,33 @@ function Monthly() {
           <p className="timeIndicator">Monthly Plan</p>
         </div>
         <div className="contain">
-          <div className="box">
-            <div className="list">
-              <p className="groupName">To do</p>
-              <span className="tree-pointer">
-                <MoreVertIcon />
-              </span>
-            </div>
-            <div className="tasks">
-              <p className="plan">Need to go to market</p>
-            </div>
-            <p className="testAddTask">+ add task</p>
+            
+            <DragonDropComponent />
           </div>
-          <div className="box">
-            <div className="list">
-              <p className="groupName">In process</p>
-              <span className="tree-pointer">
-                <MoreVertIcon />
-              </span>
-            </div>
-          </div>
-          <div className="box">
-            <div className="list">
-              <p className="groupName">Done</p>
-              <span className="tree-pointer">
-                <MoreVertIcon />
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
+    <div className="modal-addf-plan">
+        <Modal
+          className="modal-add-plan"
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+        >
+          <h3>All Special Days</h3>
+          <div>
+            <DatePicker
+              className="date"
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+            />
+          </div>
+          <div className="new-plan-input">
+            <textarea placeholder="Your plan"></textarea>
+          </div>
+          <div>
+            <button onClick={() => setModalIsOpen(false)}>Add Plan</button>
+          </div>
+        </Modal>
+      </div>
   </div>
   )
 }

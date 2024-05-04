@@ -1,0 +1,12 @@
+.form-signin form {
+    display: flex;
+    flex-direction: column;
+    width: 612px;
+    height: 500px;
+    border-radius: 10px;
+    margin-left: 700px;
+    margin-top: 150px;
+    border: 1px solid #22222240;
+    opacity: 0px;
+    border: 1px solid #22222240;
+}

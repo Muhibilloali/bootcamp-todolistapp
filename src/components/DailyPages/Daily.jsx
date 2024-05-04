@@ -152,8 +152,6 @@ function Daily() {
   };
 
   //bu yerdagi kod Delete buttoni uchun
-  
-
 
   const renderTitles = () => {
     return data.map((item) => (
@@ -181,9 +179,6 @@ function Daily() {
       </div>
     ));
   };
-
-
-
 
   //bu kod drog and drop uchun
 
@@ -276,53 +271,13 @@ function Daily() {
               {presentDate} {week}
             </p>
           </div>
-          {/* <div className="contain">
-            <div className="contain-todo">
-              <div className="box1">
-                <div className="list">
-                  <p className="groupName">To do</p>
-                  <div
-                    className="addmodal"
-                    onClick={() => setModalIsOpen(true)}
-                  >
-                    <AddIcon />
-                  </div>
-                </div>
 
-                <div>
-
-                  <div className="tasks">
-                    <div id="drag1" draggable="true" onDragStart={drag}>
-
-                      {renderTitles()}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="contain-progress">
-              <div className="box2">
-                <div className="list">
-                  <p className="groupName">In process</p>
-                </div>
-              </div>
-            </div>
-            <div className="contain-done">
-              <div className="box3">
-                <div className="list">
-                  <p className="groupName">Done</p>
-                </div>
-              </div>
-            </div>
-          </div> */}
           <div className="contain">
-            
             <DragonDropComponent />
           </div>
         </div>
       </div>
 
-     
       <div className="modal-addf-plan">
         <Modal
           className="modal-add-plan"

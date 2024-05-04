@@ -8,6 +8,7 @@ import Profile from "../Images/user-icon.jpg";
 import DatePicker from "react-datepicker";
 import Modal from "react-modal";
 import "./Weekly.css";
+import { DragonDropComponent } from "../DragAndDropPages/dragonDropComponent";
 
 function Weekly() {
   const settings = {
@@ -142,7 +143,7 @@ function Weekly() {
             {/* <p className="timeIndicator">Week Plan</p> */}
             {presentDate}
           </div>
-          <div className="contain">
+          {/* <div className="contain">
             <div className="contain-todo">
               <div className="box1">
                 <div className="list">
@@ -174,9 +175,14 @@ function Weekly() {
                 </div>
               </div>
             </div>
+          </div> */}
+          <div className="contain">
+            
+            <DragonDropComponent />
           </div>
         </div>
       </div>
+
       <div className="modal-addf-plan">
         <Modal
           className="modal-add-plan"
